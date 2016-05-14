@@ -16,6 +16,7 @@ class AddPositionsTable extends Migration
             $table->bigInteger('timestamp')->primary();
             $table->string('lat');
             $table->string('long');
+            $table->boolean('is_gps')->default(0);
             $table->timestamp('created');
         });
     }
