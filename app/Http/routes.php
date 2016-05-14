@@ -11,6 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index');
+Route::get('/article', 'HomeController@articles');
+Route::get('/gallery', 'HomeController@gallery');
+Route::get('/map', 'MapController@index');
+Route::get('/map/positions', 'MapController@getPositions');
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+
+    Route::resource('gallery', 'GalleryController');
+    Route::resource('article', 'ArticleController');
 });
+
+Route::auth();
