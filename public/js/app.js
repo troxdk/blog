@@ -21,19 +21,76 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Map = function Map() {
-    _classCallCheck(this, Map);
+var Map = function () {
+    function Map() {
+        var _this = this;
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZXJzZ2wiLCJhIjoiY2lqMDE4a2dhMDAzOHYybTUyenZ6ZmlxZiJ9.eCEhAY2tvbxtGSaXR3pkUA';
-    this.map = new mapboxgl.Map({
-        container: 'map', // container id
-        style: 'mapbox://styles/mapbox/satellite-streets-v9', //stylesheet location
-        center: [10.4833279, 55.3190627],
-        zoom: 10
-    });
-};
+        _classCallCheck(this, Map);
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZXJzZ2wiLCJhIjoiY2lqMDE4a2dhMDAzOHYybTUyenZ6ZmlxZiJ9.eCEhAY2tvbxtGSaXR3pkUA';
+        this.map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/satellite-streets-v9', //stylesheet location
+            center: [10.3685232, 55.3950927],
+            zoom: 15
+        });
+
+        this.map.on('load', function () {
+            _this.getPostions();
+        });
+    }
+
+    _createClass(Map, [{
+        key: 'getPostions',
+        value: function getPostions() {
+            var _this2 = this;
+
+            $.getJSON('/map/positions', function (data) {
+                //console.log(data);
+                if (data) {
+                    _this2.parsePositions(data);
+                }
+            });
+        }
+    }, {
+        key: 'parsePositions',
+        value: function parsePositions(data) {
+            //console.log(data);
+
+            this.map.addSource('route', {
+                'type': 'geojson',
+                'data': {
+                    'type': 'Feature',
+                    'properties': {},
+                    'geometry': {
+                        'type': 'LineString',
+                        'coordinates': data
+                    }
+                }
+            });
+
+            this.map.addLayer({
+                'id': 'route',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': 'red',
+                    'line-width': 5
+                }
+            });
+        }
+    }]);
+
+    return Map;
+}();
 
 exports.default = Map;
 

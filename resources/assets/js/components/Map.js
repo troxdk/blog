@@ -5,8 +5,51 @@ export default class Map {
         this.map = new mapboxgl.Map({
             container: 'map', // container id
             style: 'mapbox://styles/mapbox/satellite-streets-v9', //stylesheet location
-            center: [10.4833279, 55.3190627],
-            zoom: 10
+            center: [10.3685232, 55.3950927],
+            zoom: 15
+        });
+
+        this.map.on('load', () => {
+            this.getPostions();
+        });
+    }
+
+    getPostions() {
+        $.getJSON('/map/positions', (data) => {
+            //console.log(data);
+            if(data) {
+                this.parsePositions(data);
+            }
+        });
+    }
+
+    parsePositions(data) {
+        //console.log(data);
+
+        this.map.addSource('route', {
+            'type': 'geojson',
+            'data': {
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': data
+                }
+            }
+        });
+
+        this.map.addLayer({
+            'id': 'route',
+            'type': 'line',
+            'source': 'route',
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': 'red',
+                'line-width': 5
+            }
         });
     }
 
