@@ -50,10 +50,12 @@ class ParsePositions extends Command
                         if(!$first) {
                             $parts = explode(',', $line);
                             if(count($parts)) {
+                                $provider = trim($parts[8]);
                                 $positions[] = [
                                     'timestamp' => strtotime($parts[0]),
                                     'lat' => $parts[1],
                                     'long' => $parts[2],
+                                    'is_gps' => ($provider === 'gps' ? 1 : 0)
                                 ];
                             }
                         } else {
@@ -64,6 +66,7 @@ class ParsePositions extends Command
 
                     if(count($positions) > 0) {
                         $result = DB::table('positions')->insert($positions);
+                        $this->info('Created ' . count($positions) . ' new positions');
                         if($result) {
                             rename($path . $file, $path . 'done/' . $file);
                         }
