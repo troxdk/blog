@@ -14,6 +14,7 @@
 Route::get('/', 'HomeController@index');
 Route::get('/article', 'HomeController@articles');
 Route::get('/gallery', 'HomeController@gallery');
+Route::get('/map', 'MapController@index');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
 

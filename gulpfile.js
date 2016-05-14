@@ -15,6 +15,7 @@ elixir(function(mix) {
     mix
         .sass('app.scss')
         .less('template/clean-blog.less')
-        .scripts('clean-blog.js');
+        .scripts('clean-blog.js')
+        .browserify('app.js');
 });
 

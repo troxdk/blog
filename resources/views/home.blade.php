@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-Noget skide lækkert lige her!!!
+<div class="container">
+    Noget skide lækkert lige her!!!
+</div>
 @endsection
