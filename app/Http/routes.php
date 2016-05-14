@@ -11,10 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index');
+Route::get('/article', 'HomeController@articles');
+Route::get('/gallery', 'HomeController@gallery');
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+
+    Route::resource('gallery', 'GalleryController');
+    Route::resource('article', 'ArticleController');
 });
 
 Route::auth();
-
-Route::get('/home', 'HomeController@index');
