@@ -16,6 +16,6 @@ elixir(function(mix) {
         .sass('app.scss')
         .less('template/clean-blog.less')
         .scripts('clean-blog.js')
-        .browserify('app.js');
+        .browserify('app.js')
+        .browserSync({proxy: 'blog.app'});
 });
-

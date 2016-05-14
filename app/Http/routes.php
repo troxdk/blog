@@ -16,6 +16,7 @@ Route::get('/article', 'HomeController@articles');
 Route::get('/gallery', 'HomeController@gallery');
 Route::get('/map', 'MapController@index');
 Route::get('/map/positions', 'MapController@getPositions');
+Route::get('/map/add', 'MapController@addPosition');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
 
