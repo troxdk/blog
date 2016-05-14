@@ -18,6 +18,9 @@ class AddImagesTable extends Migration
             $table->string('title');
             $table->string('lat');
             $table->string('long');
+            $table->string('filename');
+            $table->string('filetype');
+            $table->integer('size');
             $table->timestamps();
         });
     }
