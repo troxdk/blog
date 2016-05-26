@@ -31,49 +31,34 @@ var Map = function () {
 
         _classCallCheck(this, Map);
 
+        this.updateInterval = 3000;
         mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kZXJzZ2wiLCJhIjoiY2lqMDE4a2dhMDAzOHYybTUyenZ6ZmlxZiJ9.eCEhAY2tvbxtGSaXR3pkUA';
         this.map = new mapboxgl.Map({
             container: 'map', // container id
             style: 'mapbox://styles/mapbox/satellite-streets-v9', //stylesheet location
-            center: [10.3685232, 55.3950927],
+            center: [10.3644205, 55.306425],
             zoom: 15
         });
 
-        this.map.on('load', function () {
-            _this.getPostions();
+        this.dragged = false;
+
+        this.source = new mapboxgl.GeoJSONSource({
+            'type': 'geojson',
+            'data': {
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': []
+                }
+            }
         });
-    }
 
-    _createClass(Map, [{
-        key: 'getPostions',
-        value: function getPostions() {
-            var _this2 = this;
+        this.map.on('load', function () {
 
-            $.getJSON('/map/positions', function (data) {
-                //console.log(data);
-                if (data) {
-                    _this2.parsePositions(data);
-                }
-            });
-        }
-    }, {
-        key: 'parsePositions',
-        value: function parsePositions(data) {
-            //console.log(data);
+            _this.map.addSource('route', _this.source);
 
-            this.map.addSource('route', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'Feature',
-                    'properties': {},
-                    'geometry': {
-                        'type': 'LineString',
-                        'coordinates': data
-                    }
-                }
-            });
-
-            this.map.addLayer({
+            _this.map.addLayer({
                 'id': 'route',
                 'type': 'line',
                 'source': 'route',
@@ -86,6 +71,45 @@ var Map = function () {
                     'line-width': 5
                 }
             });
+
+            _this.getPostions();
+        });
+
+        this.map.on('dragstart', function () {
+            _this.dragged = true;
+        });
+    }
+
+    _createClass(Map, [{
+        key: 'getPostions',
+        value: function getPostions() {
+            var _this2 = this;
+
+            $.getJSON('/map/positions', function (data) {
+                if (data) {
+                    _this2.parsePositions(data);
+                }
+
+                setTimeout(function () {
+                    _this2.getPostions();
+                }, _this2.updateInterval);
+            });
+        }
+    }, {
+        key: 'parsePositions',
+        value: function parsePositions(data) {
+            this.source.setData({
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': data
+                }
+            });
+
+            if (!this.dragged) {
+                this.map.setCenter(data[data.length - 1]);
+            }
         }
     }]);
 
