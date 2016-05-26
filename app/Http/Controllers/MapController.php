@@ -16,7 +16,7 @@ class MapController extends Controller
 
     public function getPositions()
     {
-        $positions = DB::table('positions')->get();
+        $positions = DB::table('positions')->where('is_gps', 1)->orderBy('timestamp', 'asc')->get();
 
         $positions = array_map(function($item){
             return [(float)$item->long, (float)$item->lat];
@@ -27,7 +27,6 @@ class MapController extends Controller
 
     public function addPosition(Request $request)
     {
-        //dd($request->all());
         DB::table('positions')->insert([
             'lat' => $request->input('lat'),
             'long' => $request->input('longitude'),
