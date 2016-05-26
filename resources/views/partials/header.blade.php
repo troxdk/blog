@@ -5,7 +5,7 @@
                 <div class="site-heading">
                     <h1>{{ $title or 'Mikkels blog' }}</h1>
                     <hr class="small">
-                    <span class="subheading">{{ $subTitle or 'A Clean Blog Theme by Start Bootstrap' }}</span>
+                    <span class="subheading">{{ $subTitle or 'Den er smuk' }}</span>
                 </div>
             </div>
         </div>
