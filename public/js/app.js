@@ -41,6 +41,7 @@ var Map = function () {
         });
 
         this.dragged = false;
+        this.latestPos = 0;
 
         this.source = new mapboxgl.GeoJSONSource({
             'type': 'geojson',
@@ -53,6 +54,15 @@ var Map = function () {
                 }
             }
         });
+
+        this.sourceData = {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': []
+            }
+        };
 
         this.map.on('load', function () {
 
@@ -85,9 +95,16 @@ var Map = function () {
         value: function getPostions() {
             var _this2 = this;
 
-            $.getJSON('/map/positions', function (data) {
+            $.getJSON('/map/positions/' + this.latestPos, function (data) {
                 if (data) {
-                    _this2.parsePositions(data);
+                    if (data.latest !== undefined) {
+                        if (parseInt(data.latest) > _this2.latestPos) {
+                            _this2.latestPos = parseInt(data.latest);
+                        }
+                    }
+                    if (data.positions !== undefined && data.positions.length > 0) {
+                        _this2.parsePositions(data.positions);
+                    }
                 }
 
                 setTimeout(function () {
@@ -97,18 +114,12 @@ var Map = function () {
         }
     }, {
         key: 'parsePositions',
-        value: function parsePositions(data) {
-            this.source.setData({
-                'type': 'Feature',
-                'properties': {},
-                'geometry': {
-                    'type': 'LineString',
-                    'coordinates': data
-                }
-            });
+        value: function parsePositions(positions) {
+            this.sourceData.geometry.coordinates = this.sourceData.geometry.coordinates.concat(positions);
+            this.source.setData(this.sourceData);
 
             if (!this.dragged) {
-                this.map.setCenter(data[data.length - 1]);
+                this.map.setCenter(positions[positions.length - 1]);
             }
         }
     }]);
