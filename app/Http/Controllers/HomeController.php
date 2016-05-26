@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home', ['subTitle' => 'Turen går Fyn rundt']);
+        return view('home', ['subTitle' => 'Turen går Fyn rundt', 'headerImg' => 'img/boats.jpg']);
     }
 
     public function gallery()
