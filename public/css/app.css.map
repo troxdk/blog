@@ -1,1 +1,1 @@
-{"version":3,"sources":["_map.scss"],"names":[],"mappings":"AACA;EACI,eAAe;EACf,WAAW;EACX,cAAc,EACjB","file":"app.css","sourcesContent":["\n#map {\n    margin: 0 auto;\n    width: 90%;\n    height: 500px;\n}"],"sourceRoot":"/source/"}
+{"version":3,"sources":["_map.scss"],"names":[],"mappings":"AACA;EACI,eAAe;EACf,YAAY;EACZ,aAAa;EACb,mBAAmB,EACtB","file":"app.css","sourcesContent":["\n#map {\n    margin: 0 auto;\n    width: 100%;\n    height: 100%;\n    position: absolute;\n}"],"sourceRoot":"/source/"}
