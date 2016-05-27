@@ -17,11 +17,8 @@ class MapController extends Controller
     public function getPositions($latest = 0)
     {
         $data = ['latest' => 0, 'positions' => []];
-        //$latest = 0;
-        /*if($request->has('latest')) {
-            $latest = $request->input('latest');
-        }*/
         $positions = DB::table('positions')
+            ->select('timestamp', 'long', 'lat')
             ->where('timestamp', '>', $latest)
             ->where('is_gps', 1)
             ->orderBy('timestamp', 'asc')
@@ -45,6 +42,8 @@ class MapController extends Controller
         DB::table('positions')->insert([
             'lat' => $request->input('lat'),
             'long' => $request->input('longitude'),
+            'direction' => $request->input('direction'),
+            'speed' => $request->input('speed'),
             'timestamp' => strtotime($request->input('time')),
             'is_gps' => ($request->input('provider') == 'gps' ? 1 : 0)
         ]);
