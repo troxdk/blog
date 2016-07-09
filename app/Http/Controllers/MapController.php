@@ -14,23 +14,36 @@ class MapController extends Controller
         return view('map.show');
     }
 
-    public function getPositions()
+    public function getPositions($latest = 0)
     {
-        $positions = DB::table('positions')->get();
+        $data = ['latest' => 0, 'positions' => []];
+        $positions = DB::table('positions')
+            ->select('timestamp', 'long', 'lat')
+            ->where('timestamp', '>', $latest)
+            ->where('is_gps', 1)
+            ->orderBy('timestamp', 'asc')
+            ->get();
 
-        $positions = array_map(function($item){
-            return [(float)$item->long, (float)$item->lat];
-        }, $positions);
+        
+        if(count($positions)) {
+            $data['latest'] = end($positions)->timestamp;
+            
+            reset($positions);
+            $data['positions'] = array_map(function($item){
+                return [(float)$item->long, (float)$item->lat];
+            }, $positions);
+        }
 
-        return response()->json($positions);
+        return response()->json($data);
     }
 
     public function addPosition(Request $request)
     {
-        //dd($request->all());
         DB::table('positions')->insert([
             'lat' => $request->input('lat'),
             'long' => $request->input('longitude'),
+            'direction' => $request->input('direction'),
+            'speed' => $request->input('speed'),
             'timestamp' => strtotime($request->input('time')),
             'is_gps' => ($request->input('provider') == 'gps' ? 1 : 0)
         ]);
