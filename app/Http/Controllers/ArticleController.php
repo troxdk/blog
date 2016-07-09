@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Auth;
 
 class ArticleController extends Controller
 {
@@ -15,7 +16,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+        $articles = Article::all();
+
+        return view('article.index', compact('articles'));
     }
 
     /**
@@ -25,7 +28,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        return view('article.create');
     }
 
     /**
@@ -36,7 +39,16 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $article = new Article;
+
+        $article->title = $request->title;
+        $article->text = $request->text;
+        $article->subtitle = $request->subtitle;
+        $article->user_id = Auth::user()->id;
+        $article->lat = $request->lat;
+        $article->long = $request->long;
+
+        $article->save();
     }
 
     /**
@@ -45,9 +57,9 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Article $article)
     {
-        //
+        return view('article.show', compact('article'));
     }
 
     /**
@@ -56,9 +68,9 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Article $article)
     {
-        //
+        return view('article.edit', compact('article'));
     }
 
     /**
@@ -68,9 +80,18 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Article $article)
     {
-        //
+        $article->title = $request->title;
+        $article->text = $request->text;
+        $article->subtitle = $request->subtitle;
+        $article->user_id = Auth::user()->id;
+        $article->lat = $request->lat;
+        $article->long = $request->long;
+
+        $article->save();
+
+        return redirect();
     }
 
     /**
@@ -79,8 +100,8 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Article $article)
     {
-        //
+        $article->delete();
     }
 }

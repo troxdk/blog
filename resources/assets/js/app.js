@@ -1,3 +1,5 @@
+require('dropzone');
+
 import Map from './components/Map';
 
 let map = null;
